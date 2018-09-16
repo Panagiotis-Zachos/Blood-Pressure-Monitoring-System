@@ -1,10 +1,13 @@
 package measurments;
 
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Random;
+import java.util.Scanner;
 
 import com.google.gson.Gson;
 
@@ -17,14 +20,19 @@ public class MeasClient {
 	private Gson gson = new Gson();
 	
 	public MeasClient() throws UnknownHostException, IOException {
-		String server = "127.0.0.1";
-		int servPort = 1234;
-		socket = new Socket(server, servPort);
 		
-		dos = new DataOutputStream(socket.getOutputStream());
+		try {
+			readIPFromFile();
+			dos = new DataOutputStream(socket.getOutputStream());
+			
+			sendMeasurment();
+			dos.writeUTF(gson.toJson(generateData(6)));
+		} catch(ConnectException e1) {
+			System.out.println("The server is probably not running.");
+		} catch(UnknownHostException e2) {
+			System.out.println("Wrong IP Address.");
+		}
 		
-		sendMeasurment();
-		dos.writeUTF(gson.toJson(generateData(6)));
 	}
 	
 	public void sendMeasurment() throws IOException {
@@ -62,6 +70,16 @@ public class MeasClient {
 		BPMeasurment meas = new BPMeasurment(id, sysBP, diasBP, heartRate);
 
 		return meas;
+	}
+	
+	private void readIPFromFile() throws IOException {
+		
+		Scanner sc = new Scanner(new File("IP_Address.txt")); 
+	    sc.useDelimiter("\\Z"); 
+	    String server = sc.next().trim();
+		int servPort = 1234;
+		socket = new Socket(server, servPort);
+		sc.close();
 	}
 	
 }

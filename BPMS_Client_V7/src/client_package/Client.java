@@ -2,10 +2,11 @@ package client_package;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Random;
+import java.util.Scanner;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -21,9 +22,7 @@ public class Client {
 	
 	public Client() throws UnknownHostException, IOException, ClassNotFoundException {
 		
-		String server = "127.0.1";
-		int servPort = 1234;
-		socket = new Socket(server, servPort);
+		readIPFromFile();
 		
 		dos = new DataOutputStream(socket.getOutputStream());
 		dis = new DataInputStream(socket.getInputStream());
@@ -62,17 +61,13 @@ public class Client {
 		return data;
 	}
 	
-//	private BPMeasurment getMeas() {
-//		
-//		Random rand = new Random();
-//		Integer tmp = (rand.nextInt(1000000) + 1000000);	
-//		String id = "up" + tmp.toString();
-//		int sysBP = rand.nextInt(40) + 1;
-//		int diasBP = rand.nextInt(70) + 1;
-//		int heartRate = rand.nextInt(90) + 1;
-//		
-//		BPMeasurment meas = new BPMeasurment(id, sysBP, diasBP, heartRate);
-//
-//		return meas;
-//	}
+	private void readIPFromFile() throws IOException {
+		
+		Scanner sc = new Scanner(new File("IP_Address.txt")); 
+	    sc.useDelimiter("\\Z"); 
+	    String server = sc.next().trim();
+		int servPort = 1234;
+		socket = new Socket(server, servPort);
+		sc.close();
+	}
 }
