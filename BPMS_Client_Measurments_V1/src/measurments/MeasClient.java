@@ -4,6 +4,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.ConnectException;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Random;
@@ -41,7 +42,7 @@ public class MeasClient {
 		dos.writeUTF(json);
 	}
 	
-	private ClientData generateData(Integer opt) {
+	private ClientData generateData(Integer opt) throws UnknownHostException {
 		
 		ClientData data;
 		
@@ -58,11 +59,11 @@ public class MeasClient {
 		return data;
 	}
 	
-	private BPMeasurment getMeas() {
+	private BPMeasurment getMeas() throws UnknownHostException {
 		
-		Random rand = new Random();
-		Integer tmp = (rand.nextInt(1000000) + 1000000);	
-		String id = "up" + tmp.toString();
+		Random rand = new Random();	
+		InetAddress inetAddress = InetAddress.getLocalHost(); 
+		String id = inetAddress.getHostName();
 		int sysBP = rand.nextInt(40) + 1;
 		int diasBP = rand.nextInt(70) + 1;
 		int heartRate = rand.nextInt(90) + 1;

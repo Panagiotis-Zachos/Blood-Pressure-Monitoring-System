@@ -30,7 +30,7 @@ public class Worker implements Runnable{
 			for(;;) {
 				try {
 					
-				    ClientData data = gson.fromJson(dis.readUTF(), ClientData.class) ;
+				    ClientData data = gson.fromJson(dis.readUTF(), ClientData.class);
 				    
 				    switch(data.option) {
 				    case 1:
@@ -41,6 +41,7 @@ public class Worker implements Runnable{
 				    case 2:
 				    case 4:
 				    	System.out.println("Sending measurments to client...");
+
 				    	dos.writeUTF(gson.toJson(book));
 				    	System.out.println("Measurments Sent");
 				    	break;
